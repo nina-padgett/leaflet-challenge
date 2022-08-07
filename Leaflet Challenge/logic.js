@@ -17,14 +17,17 @@
     if(depth < 5){
       color = "#66ff33"
     }
-    else if (depth < 10){
+    else if (depth < 7){
       color = "#009900"
     }
-    else {
+    else if (depth < 9){
       color = "#006600"
     }
+    else {
+      color = "#003300"
+    }
     return color
-  }
+   }
 
  // Define streetmap and darkmap layers.
  let streetmap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -51,7 +54,6 @@ let myMap = L.map("map", {
     zoom: 5,
     layers: [streetmap]
     });
-
 
 // Add streetmap tile to map.
 streetmap.addTo(myMap);
@@ -95,25 +97,24 @@ d3.json(queryUrl).then(function(data) {
   earthquakes.addTo(myMap);
 
 
-  // Create legend.
-  let legend = L.control({position: "bottomright"});
-  legend.onAdd = function() {
+// Create legend.
+let legend = L.control({position: "bottomright"});
+legend.onAdd = function () {
 
     let div = L.DomUtil.create("div", "info legend"),
-    // Define separation of colors
-    colorGrades = [0, 5, 10];
-    // Colors of the legend
-  //  colors = ["#66ff33", "#009900", "#006600"];
-    labels = [];
+    // Define separation of colors.
+        colorGrades = [0, 5, 7, 9],
+    // Colors of the legend.
+        colors = ["#66ff33", "#009900", "#006600", "#003300"];
     // Loop through magnitude intervals and generate a label with a colored square for each interval.
     for (var i = 0; i < colorGrades.length; i++) {
       div.innerHTML +=
-          '<i style="background:' + circleColor(colorGrades[i] + 1) + '"></i> ' +
-          colorGrades[i] + (colorGrades[i + 1] ? '&ndash;' + colorGrades[i + 1] + '<br>' : '+');
-  }
-
-  return div;
+          `<i style="background:${colors[i]}"></i>
+          ${colorGrades[i]} ${colorGrades[i + 1] ? `&ndash; 
+          ${colorGrades[i + 1]} <br> ` : "+"}`;
+    }
+    return div;
 };
 
-legend.addTo(map);
+legend.addTo(myMap);
 });
